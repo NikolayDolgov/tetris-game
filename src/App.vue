@@ -1,7 +1,7 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import Field from './components/Field.vue'
 import { matrix } from './assets/utils/utils.js'
 </script>
 
@@ -14,7 +14,7 @@ import { matrix } from './assets/utils/utils.js'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld :matrix=matrix />
+  <Field :matrix=matrix />
 </template>
 
 <style scoped>

@@ -10,8 +10,3 @@
   display: flex;
   height: calc(100% / 10);
 }
-
-.cell {
-  border: 1px solid black;
-  width: calc(100% / 10);
-}
