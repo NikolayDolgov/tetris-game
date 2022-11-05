@@ -34,19 +34,21 @@ export default {
           console.log("Не найден");
           if (workMatrix[i][j]["status"] === 2) { // поиск квадрата на строке
             if (i === '9') {
-              console.log('Достигли низа');
+              console.log('Достигли абсолютного низа');
               workMatrix[i][j]["status"] = 1;
               // проверяем заполнена ли девятая линия полностью.
               let check = 0;
               for (let y in workMatrix[i]) {
-                if (workMatrix[i][y] === 0) {
+                if (workMatrix[i][y]['status'] === 0) {
                   break;
                 }
                 else {
                   check++
+                  console.log(check)
                 }
               }
               if (check === 10) { // очищаем девятую линию
+                console.log('Удаление')
                 let newWorkMatrix = {
                   '0': {
                     '0': { status: 0, id: 1 },
@@ -61,22 +63,78 @@ export default {
                     '9': { status: 0, id: 10 },
                   },
                 };
+
                 let newRow = 0;
+
+                const testFunvtion = (newWorkMatrix) => {
+                  return newWorkMatrix;
+                }
                 for (let row in workMatrix) {
-                  /*newRow++
-                  newWorkMatrix[String(newRow)] = workMatrix[row];
-                  if(newRow === 9){
+                  newRow++
+                  console.log(workMatrix[row])
+                  console.log(workMatrix[row]['0'])
+                  if (newWorkMatrix[String(newRow)] === undefined) {
+                    newWorkMatrix[String(newRow)] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['0'] === undefined) {
+                    newWorkMatrix[String(newRow)]['0'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['1'] === undefined) {
+                    newWorkMatrix[String(newRow)]['1'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['2'] === undefined) {
+                    newWorkMatrix[String(newRow)]['2'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['3'] === undefined) {
+                    newWorkMatrix[String(newRow)]['3'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['4'] === undefined) {
+                    newWorkMatrix[String(newRow)]['4'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['5'] === undefined) {
+                    newWorkMatrix[String(newRow)]['5'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['6'] === undefined) {
+                    newWorkMatrix[String(newRow)]['6'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['7'] === undefined) {
+                    newWorkMatrix[String(newRow)]['7'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['8'] === undefined) {
+                    newWorkMatrix[String(newRow)]['8'] = {}
+                  };
+                  if (newWorkMatrix[String(newRow)]['9'] === undefined) {
+                    newWorkMatrix[String(newRow)]['9'] = {}
+                  };
+                  newWorkMatrix[String(newRow)]['0'] = workMatrix[row]['0']
+                  newWorkMatrix[String(newRow)]['1'] = workMatrix[row]['1']
+                  newWorkMatrix[String(newRow)]['2'] = workMatrix[row]['2']
+                  newWorkMatrix[String(newRow)]['3'] = workMatrix[row]['3']
+                  newWorkMatrix[String(newRow)]['4'] = workMatrix[row]['4']
+                  newWorkMatrix[String(newRow)]['5'] = workMatrix[row]['5']
+                  newWorkMatrix[String(newRow)]['6'] = workMatrix[row]['6']
+                  newWorkMatrix[String(newRow)]['7'] = workMatrix[row]['7']
+                  newWorkMatrix[String(newRow)]['8'] = workMatrix[row]['8']
+                  newWorkMatrix[String(newRow)]['9'] = workMatrix[row]['9']
+
+                  if (newRow === 9) {
                     console.log(newWorkMatrix)
                     console.log(workMatrix)
-                    workMatrix = newWorkMatrix
-                    break;
-                  }*/
+                    workMatrix = newWorkMatrix;
+                    function cloneObj(obj) {
+                      return JSON.parse(JSON.stringify(obj))
+                    }
 
+                    let threeMatrix = cloneObj(newWorkMatrix)
+                    workMatrix = cloneObj(threeMatrix)
+                    this.$store.commit('сhangeKey', workMatrix)
+                    //workMatrix = testFunvtion(newWorkMatrix);
+                    console.log('присвоение');
+                    break
+                  }
                 }
-
-
-                doNewMatrix(0, Math.floor(Math.random() * 10));
               }
+              doNewMatrix(0, Math.floor(Math.random() * 10));
             }
             else if (i !== '9' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом
               doNewMatrix(0, Math.floor(Math.random() * 10));
@@ -91,7 +149,20 @@ export default {
             else {
               // смещаем чёрный квадрат вниз
               workMatrix[i][j]["status"] = 0;
-              workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+              if (workMatrix[String(Number(i) + 1)] === undefined && Number(i) + 1 !== 10) {
+                workMatrix[String(Number(i) + 1)] = {}
+              };
+              console.log(workMatrix[String(Number(i) + 1)])
+              console.log([String(Number(i) + 1)])
+              if (workMatrix[String(Number(i) + 1)][j] === undefined && (Number(i) + 1) !== 10) {
+                workMatrix[String(Number(i) + 1)][j] = {}
+              };
+              if (workMatrix[String(Number(i) + 1)][j]["status"] === undefined && Number(i) + 1 !== 10) {
+                workMatrix[String(Number(i) + 1)][j]["status"] = {}
+              };
+              if (String(Number(i) + 1) !== 10) {
+                workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+              }
             }
             console.log('ff')
             k = 1;
@@ -117,17 +188,15 @@ export default {
     //сalculateMovement(workMatrix);
 
     setInterval(() => {
-      if (!end){
+      if (!end) {
         сalculateMovement();
         //count++
         this.$store.commit('increment')
         //this.$store.commit('сhangeKey', workMatrix)
       }
-        
 
-      
       //this.$store.commit('сhangeKey', workMatrix)
-    }, 50);
+    }, 100);
 
 
     //const updateTime = () => setTimeout(сalculateMovement(props.matrix), 3000);
