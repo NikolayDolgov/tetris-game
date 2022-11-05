@@ -25,6 +25,8 @@ export default {
         this.movementToRight();
       if (event.key === 'ArrowLeft')
         this.movementToLeft();
+      if (event.key === 'ArrowDown')
+        this.movementToDown();
     },
     movementToLeft: function () { // слушатель // смещаем в право
       clearInterval(this.timer);
@@ -39,12 +41,6 @@ export default {
 
             if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["status"] != 1) {
               this.workMatrix[i][j]["status"] = 0;
-              if (this.workMatrix[i][String(Number(j) - 1)] === undefined) {
-                this.workMatrix[i][String(Number(j) - 1)] = {}
-              };
-              if (this.workMatrix[i][String(Number(j) - 1)]["status"] === undefined) {
-                this.workMatrix[i][String(Number(j) - 1)]["status"] = {}
-              };
               this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
               this.timer = setInterval(this.renderF, 200);
               s = 1;
@@ -77,13 +73,39 @@ export default {
 
             if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["status"] != 1) {
               this.workMatrix[i][j]["status"] = 0;
-              if (this.workMatrix[i][String(Number(j) + 1)] === undefined) {
-                this.workMatrix[i][String(Number(j) + 1)] = {}
-              };
-              if (this.workMatrix[i][String(Number(j) + 1)]["status"] === undefined) {
-                this.workMatrix[i][String(Number(j) + 1)]["status"] = {}
-              };
               this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+              this.timer = setInterval(this.renderF, 200);
+              s = 1;
+              break;
+            }
+            else {
+              this.timer = setInterval(this.renderF, 200);
+              s = 1;
+              break;
+            }
+          }
+        }
+        if (k === 1)
+          break;
+      }
+      if (s === 0)
+        this.timer = setInterval(this.renderF, 200);
+    },
+    movementToDown: function () { // слушатель
+      clearInterval(this.timer);
+      let k = 0;
+      let s = 0;
+      for (let i in this.workMatrix) {
+        for (let j in this.workMatrix[i]) {
+          console.log("Не найден");
+          if (this.workMatrix[i][j]["status"] === 2) {
+            k = 1;
+            console.log('найден')
+            // опускаем вниз
+
+            if (Number(i) <= 8 && this.workMatrix[String(Number(i) + 1)][j]["status"] != 1) {
+              this.workMatrix[i][j]["status"] = 0;
+              this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
               this.timer = setInterval(this.renderF, 200);
               s = 1;
               break;
@@ -162,14 +184,14 @@ export default {
                   '7': { status: 0, id: 8 },
                   '8': { status: 0, id: 9 },
                   '9': { status: 0, id: 10 },
-                  },
+                },
                   console.log(workMatrix);
               }
               doNewMatrix(0, Math.floor(Math.random() * 10));
               k = 1;
               break;
             }
-            else if (i !== '9' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом
+            else if (i !== '9' && i !== '0' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом
               console.log('Достигли низа (квадрат)');
               workMatrix[i][j]["status"] = 1;
               doNewMatrix(0, Math.floor(Math.random() * 10));
