@@ -103,10 +103,10 @@ export default {
     },
   },
   mounted() {
-    document.addEventListener('keyup', this.listener); // регистрация
+    document.addEventListener('keydown', this.listener); // регистрация
   },
   beforeDestroy() {
-    document.removeEventListener('keyup', this.listener); // удаление
+    document.removeEventListener('keydown', this.listener); // удаление
   },
   data() {
     let timer;
@@ -121,6 +121,7 @@ export default {
     }
 
     const сalculateMovement = () => { // поиск квадрата с индексом 2, как только квадрат отпускается он равен 1
+
       let k = 0;
       for (let i in workMatrix) {
         for (let j in workMatrix[i]) {
@@ -136,115 +137,54 @@ export default {
                   break;
                 }
                 else {
-                  check++
-                  console.log(check)
+                  check++;
                 }
               }
-              if (check === 10) { 
-                // очищаем девятую линию
-                rowDeleteColor = true;
+              if (check === 10) {
+                // новая функция очистки, изменения данных циклом на строку ниже.
                 console.log('Удаление')
-                let newWorkMatrix = {
-                  '0': {
-                    '0': { status: 0, id: 1 },
-                    '1': { status: 0, id: 2 },
-                    '2': { status: 0, id: 3 },
-                    '3': { status: 0, id: 4 },
-                    '4': { status: 0, id: 5 },
-                    '5': { status: 0, id: 6 },
-                    '6': { status: 0, id: 7 },
-                    '7': { status: 0, id: 8 },
-                    '8': { status: 0, id: 9 },
-                    '9': { status: 0, id: 10 },
-                  },
-                };
 
-                let newRow = 0;
-
-                for (let row in workMatrix) {
-                  newRow++
-                  console.log(workMatrix[row])
-                  console.log(workMatrix[row]['0'])
-                  if (newWorkMatrix[String(newRow)] === undefined) {
-                    newWorkMatrix[String(newRow)] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['0'] === undefined) {
-                    newWorkMatrix[String(newRow)]['0'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['1'] === undefined) {
-                    newWorkMatrix[String(newRow)]['1'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['2'] === undefined) {
-                    newWorkMatrix[String(newRow)]['2'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['3'] === undefined) {
-                    newWorkMatrix[String(newRow)]['3'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['4'] === undefined) {
-                    newWorkMatrix[String(newRow)]['4'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['5'] === undefined) {
-                    newWorkMatrix[String(newRow)]['5'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['6'] === undefined) {
-                    newWorkMatrix[String(newRow)]['6'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['7'] === undefined) {
-                    newWorkMatrix[String(newRow)]['7'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['8'] === undefined) {
-                    newWorkMatrix[String(newRow)]['8'] = {};
-                  };
-                  if (newWorkMatrix[String(newRow)]['9'] === undefined) {
-                    newWorkMatrix[String(newRow)]['9'] = {};
-                  };
-                  newWorkMatrix[String(newRow)]['0'] = workMatrix[row]['0']
-                  newWorkMatrix[String(newRow)]['1'] = workMatrix[row]['1']
-                  newWorkMatrix[String(newRow)]['2'] = workMatrix[row]['2']
-                  newWorkMatrix[String(newRow)]['3'] = workMatrix[row]['3']
-                  newWorkMatrix[String(newRow)]['4'] = workMatrix[row]['4']
-                  newWorkMatrix[String(newRow)]['5'] = workMatrix[row]['5']
-                  newWorkMatrix[String(newRow)]['6'] = workMatrix[row]['6']
-                  newWorkMatrix[String(newRow)]['7'] = workMatrix[row]['7']
-                  newWorkMatrix[String(newRow)]['8'] = workMatrix[row]['8']
-                  newWorkMatrix[String(newRow)]['9'] = workMatrix[row]['9']
-
-                  if (newRow === 9) {
-                    console.log(newWorkMatrix)
-                    console.log(workMatrix)
-                    workMatrix = newWorkMatrix;
-                    function cloneObj(obj) {
-                      return JSON.parse(JSON.stringify(obj))
+                for (let rows in workMatrix) {
+                  if (rows !== '9') {
+                    for (let row in workMatrix[rows]) {
+                      workMatrix[String(9 - Number(rows))][row] = workMatrix[String(8 - Number(rows))][row];
                     }
-
-                    let threeMatrix = cloneObj(newWorkMatrix)
-                    workMatrix = cloneObj(threeMatrix)
-                    this.$store.commit('сhangeKey', workMatrix)
-                    rowDeleteColor = false;
-                    console.log('присвоение');
-                    break
                   }
                 }
+                workMatrix['0'] = {
+                  '0': { status: 0, id: 1 },
+                  '1': { status: 0, id: 2 },
+                  '2': { status: 0, id: 3 },
+                  '3': { status: 0, id: 4 },
+                  '4': { status: 0, id: 5 },
+                  '5': { status: 0, id: 6 },
+                  '6': { status: 0, id: 7 },
+                  '7': { status: 0, id: 8 },
+                  '8': { status: 0, id: 9 },
+                  '9': { status: 0, id: 10 },
+                  },
+                  console.log(workMatrix);
               }
               doNewMatrix(0, Math.floor(Math.random() * 10));
+              k = 1;
+              break;
             }
             else if (i !== '9' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом
-              doNewMatrix(0, Math.floor(Math.random() * 10));
               console.log('Достигли низа (квадрат)');
               workMatrix[i][j]["status"] = 1;
+              doNewMatrix(0, Math.floor(Math.random() * 10));
             }
             else if (i === '0' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом на проигрыш
-              alert('Вы проиграли');
               end = true; // можно удалить счётчик
               workMatrix[i][j]["status"] = 3;
             }
             else {
               // смещаем чёрный квадрат вниз
               workMatrix[i][j]["status"] = 0;
-              if (workMatrix[String(Number(i) + 1)] === undefined && Number(i) + 1 !== 10) {
+              workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+              /*if (workMatrix[String(Number(i) + 1)] === undefined && Number(i) + 1 !== 10) {
                 workMatrix[String(Number(i) + 1)] = {}
               };
-              console.log(workMatrix[String(Number(i) + 1)])
               console.log([String(Number(i) + 1)])
               if (workMatrix[String(Number(i) + 1)][j] === undefined && (Number(i) + 1) !== 10) {
                 workMatrix[String(Number(i) + 1)][j] = {}
@@ -254,7 +194,7 @@ export default {
               };
               if (String(Number(i) + 1) !== 10) {
                 workMatrix[String(Number(i) + 1)][j]["status"] = 2;
-              }
+              }*/
             }
             console.log('ff')
             k = 1;
@@ -271,8 +211,8 @@ export default {
     const doNewMatrix = (addressGlobal, addressLocal) => {
       const firstOrder = addressGlobal;
       const secondOrder = addressLocal;
-      console.log(workMatrix);
-      workMatrix[firstOrder][secondOrder]["status"] += 2;
+      console.log("Сработал рандом");
+      workMatrix[firstOrder][secondOrder]["status"] = 2;
       //this.$store.commit('сhangeKey', workMatrix)
     }
 
