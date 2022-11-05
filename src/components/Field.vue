@@ -17,7 +17,100 @@ export default {
       return this.$store.state.matrixField
     }
   },
+  methods: {
+    listener: function (event) { // слушатель
+      console.log('pressed');
+      console.log(event.key);
+      if (event.key === 'ArrowRight')
+        this.movementToRight();
+      if (event.key === 'ArrowLeft')
+        this.movementToLeft();
+    },
+    movementToLeft: function () { // слушатель // смещаем в право
+      clearInterval(this.timer);
+      let k = 0;
+      let s = 0;
+      for (let i in this.workMatrix) {
+        for (let j in this.workMatrix[i]) {
+          console.log("Не найден");
+          if (this.workMatrix[i][j]["status"] === 2) {
+            k = 1;
+            console.log('найден')
+
+            if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["status"] != 1) {
+              this.workMatrix[i][j]["status"] = 0;
+              if (this.workMatrix[i][String(Number(j) - 1)] === undefined) {
+                this.workMatrix[i][String(Number(j) - 1)] = {}
+              };
+              if (this.workMatrix[i][String(Number(j) - 1)]["status"] === undefined) {
+                this.workMatrix[i][String(Number(j) - 1)]["status"] = {}
+              };
+              this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
+              this.timer = setInterval(this.renderF, 200);
+              s = 1;
+              break;
+            }
+            else {
+              this.timer = setInterval(this.renderF, 200);
+              s = 1;
+              break;
+            }
+          }
+        }
+        if (k === 1)
+          break;
+      }
+      if (s === 0)
+        this.timer = setInterval(this.renderF, 200);
+    },
+    movementToRight: function () { // слушатель
+      clearInterval(this.timer);
+      let k = 0;
+      let s = 0;
+      for (let i in this.workMatrix) {
+        for (let j in this.workMatrix[i]) {
+          console.log("Не найден");
+          if (this.workMatrix[i][j]["status"] === 2) {
+            k = 1;
+            console.log('найден')
+            // смещаем в право
+
+            if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["status"] != 1) {
+              this.workMatrix[i][j]["status"] = 0;
+              if (this.workMatrix[i][String(Number(j) + 1)] === undefined) {
+                this.workMatrix[i][String(Number(j) + 1)] = {}
+              };
+              if (this.workMatrix[i][String(Number(j) + 1)]["status"] === undefined) {
+                this.workMatrix[i][String(Number(j) + 1)]["status"] = {}
+              };
+              this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+              this.timer = setInterval(this.renderF, 200);
+              s = 1;
+              break;
+            }
+            else {
+              this.timer = setInterval(this.renderF, 200);
+              s = 1;
+              break;
+            }
+          }
+        }
+        if (k === 1)
+          break;
+      }
+      if (s === 0)
+        this.timer = setInterval(this.renderF, 200);
+    },
+  },
+  mounted() {
+    document.addEventListener('keyup', this.listener); // регистрация
+  },
+  beforeDestroy() {
+    document.removeEventListener('keyup', this.listener); // удаление
+  },
   data() {
+    let timer;
+    let rowDeleteColor;
     let end = false;
     let workMatrix;
     if (this.matrix) {
@@ -47,7 +140,9 @@ export default {
                   console.log(check)
                 }
               }
-              if (check === 10) { // очищаем девятую линию
+              if (check === 10) { 
+                // очищаем девятую линию
+                rowDeleteColor = true;
                 console.log('Удаление')
                 let newWorkMatrix = {
                   '0': {
@@ -66,45 +161,42 @@ export default {
 
                 let newRow = 0;
 
-                const testFunvtion = (newWorkMatrix) => {
-                  return newWorkMatrix;
-                }
                 for (let row in workMatrix) {
                   newRow++
                   console.log(workMatrix[row])
                   console.log(workMatrix[row]['0'])
                   if (newWorkMatrix[String(newRow)] === undefined) {
-                    newWorkMatrix[String(newRow)] = {}
+                    newWorkMatrix[String(newRow)] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['0'] === undefined) {
-                    newWorkMatrix[String(newRow)]['0'] = {}
+                    newWorkMatrix[String(newRow)]['0'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['1'] === undefined) {
-                    newWorkMatrix[String(newRow)]['1'] = {}
+                    newWorkMatrix[String(newRow)]['1'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['2'] === undefined) {
-                    newWorkMatrix[String(newRow)]['2'] = {}
+                    newWorkMatrix[String(newRow)]['2'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['3'] === undefined) {
-                    newWorkMatrix[String(newRow)]['3'] = {}
+                    newWorkMatrix[String(newRow)]['3'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['4'] === undefined) {
-                    newWorkMatrix[String(newRow)]['4'] = {}
+                    newWorkMatrix[String(newRow)]['4'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['5'] === undefined) {
-                    newWorkMatrix[String(newRow)]['5'] = {}
+                    newWorkMatrix[String(newRow)]['5'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['6'] === undefined) {
-                    newWorkMatrix[String(newRow)]['6'] = {}
+                    newWorkMatrix[String(newRow)]['6'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['7'] === undefined) {
-                    newWorkMatrix[String(newRow)]['7'] = {}
+                    newWorkMatrix[String(newRow)]['7'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['8'] === undefined) {
-                    newWorkMatrix[String(newRow)]['8'] = {}
+                    newWorkMatrix[String(newRow)]['8'] = {};
                   };
                   if (newWorkMatrix[String(newRow)]['9'] === undefined) {
-                    newWorkMatrix[String(newRow)]['9'] = {}
+                    newWorkMatrix[String(newRow)]['9'] = {};
                   };
                   newWorkMatrix[String(newRow)]['0'] = workMatrix[row]['0']
                   newWorkMatrix[String(newRow)]['1'] = workMatrix[row]['1']
@@ -128,7 +220,7 @@ export default {
                     let threeMatrix = cloneObj(newWorkMatrix)
                     workMatrix = cloneObj(threeMatrix)
                     this.$store.commit('сhangeKey', workMatrix)
-                    //workMatrix = testFunvtion(newWorkMatrix);
+                    rowDeleteColor = false;
                     console.log('присвоение');
                     break
                   }
@@ -179,24 +271,24 @@ export default {
     const doNewMatrix = (addressGlobal, addressLocal) => {
       const firstOrder = addressGlobal;
       const secondOrder = addressLocal;
-      console.log(workMatrix)
-      workMatrix[firstOrder][secondOrder]["status"] += 2
+      console.log(workMatrix);
+      workMatrix[firstOrder][secondOrder]["status"] += 2;
       //this.$store.commit('сhangeKey', workMatrix)
     }
 
     doNewMatrix(0, Math.floor(Math.random() * 10));
     //сalculateMovement(workMatrix);
 
-    setInterval(() => {
+    const renderF = () => {
       if (!end) {
         сalculateMovement();
         //count++
         this.$store.commit('increment')
         //this.$store.commit('сhangeKey', workMatrix)
       }
+    }
 
-      //this.$store.commit('сhangeKey', workMatrix)
-    }, 100);
+    timer = setInterval(renderF, 200);
 
 
     //const updateTime = () => setTimeout(сalculateMovement(props.matrix), 3000);
@@ -205,6 +297,9 @@ export default {
     return {
       doNewMatrix,
       workMatrix,
+      timer,
+      rowDeleteColor,
+      renderF,
     }
   },
 }
@@ -214,13 +309,15 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="topNo">
     <p>{{ this.count }}</p>
     <div class="firstClass">
       <div v-for="(item, index) in this.matrix" class="twoClass">
         <div v-for="(itemTwo, indexTwo) in item" class="threeClass">
           <div v-if="itemTwo.status >= 3" class="cell cell__color_red">{{ itemTwo.status }}</div>
-          <div v-if="itemTwo.status >= 1" class="cell cell__color_blue">{{ itemTwo.status }}</div>
+          <div v-else-if="itemTwo.status >= 1"
+            v-bind:class="{ 'cell__color_orange': (rowDeleteColor && indexTwo === '9') }" class="cell cell__color_blue">
+            {{ itemTwo.status }}</div>
           <div v-else class="cell">{{ itemTwo.status }}</div>
         </div>
       </div>
