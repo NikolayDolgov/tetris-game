@@ -10,3 +10,8 @@
   display: flex;
   height: calc(100% / 10);
 }
+
+.threeClass {
+ width: 100%;
+ height: 100%;
+}
