@@ -142,20 +142,88 @@ export default {
       workMatrix = constMatrix;
     }
 
-    const сalculateMovement = () => { // поиск квадрата с индексом 2, как только квадрат отпускается он равен 1
-
+    function сheckingString(stringAdress, matrix) {
       let k = 0;
+      for (let i in matrix[stringAdress]) {
+        console.log(matrix[stringAdress][i]);
+        if (matrix[stringAdress][i]["id"] === 2) {
+          k = 1;
+          if (i !== '9') {
+            if (matrix[stringAdress][String(Number(i) + 1)]["id"] === 2) {
+              if (matrix[String(Number(stringAdress) + 1)][i]["id"] !== 1 && matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["id"] !== 1) {
+                matrix[stringAdress][i]["id"] = 0;
+                matrix[stringAdress][String(Number(i) + 1)]["id"] = 0;
+                matrix[stringAdress][i]["status"] = 0;
+                matrix[stringAdress][String(Number(i) + 1)]["status"] = 0;
+
+                matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
+                matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["id"] = 2;
+                matrix[String(Number(stringAdress) + 1)][i]["status"] = 2;
+                matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["status"] = 2;
+              }
+              else {
+                matrix[stringAdress][i]["id"] = 1;
+                matrix[stringAdress][String(Number(i) + 1)]["id"] = 1;
+              }
+              break;
+            }
+            else {
+              if (stringAdress !== '9' && workMatrix[String(Number(stringAdress) + 1)][i]["id"] === 1) { // поиск квадарта под квадартом
+                console.log('Достигли низа (квадрат)');
+                workMatrix[String(Number(stringAdress))][i]["id"] = 1;
+              }
+              else {
+                matrix[stringAdress][i]["status"] = 0;
+                matrix[stringAdress][i]["id"] = 0;
+                matrix[String(Number(stringAdress) + 1)][i]["status"] = 2;
+                matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
+              }
+
+              break;
+            }
+          }
+          else {
+            if (workMatrix[String(Number(stringAdress) + 1)][i]["id"] === 1) { // поиск квадарта под квадартом
+              console.log('Достигли низа (квадрат)');
+              workMatrix[String(Number(stringAdress))][i]["id"] = 1;
+            }
+            else {
+              matrix[stringAdress][i]["status"] = 0;
+              matrix[stringAdress][i]["id"] = 0;
+              matrix[String(Number(stringAdress) + 1)][i]["status"] = 2;
+              matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
+            }
+
+            break;
+          }
+
+        }
+        if (k === 1)
+          break;
+      }
+      return matrix;
+    }
+
+    const сalculateMovement = () => {
+      // status - цвет фигуры
+      // поиск фигуры по id. Фигура, которая может перемещаться id = 2, пустое поле - 0, занятое - 1
+      let k = 0;
+      let doRandom = 0;
       for (let i in workMatrix) {
         for (let j in workMatrix[i]) {
-          console.log("Не найден");
-          if (workMatrix[i][j]["status"] === 2) { // поиск квадрата на строке
+          if (workMatrix[i][j]["id"] === 2) {
+            doRandom = 1;
+            k = 1;
+            console.log(`Найден ${i} ${j}`)
+            // поиск на строке
+            console.log("Не найден");
             if (i === '9') {
               console.log('Достигли абсолютного низа');
-              workMatrix[i][j]["status"] = 1;
+              workMatrix[i][j]["id"] = 1;
               // проверяем заполнена ли девятая линия полностью.
               let check = 0;
               for (let y in workMatrix[i]) {
-                if (workMatrix[i][y]['status'] === 0) {
+                if (workMatrix[i][y]['id'] === 0) {
                   break;
                 }
                 else {
@@ -163,7 +231,7 @@ export default {
                 }
               }
               if (check === 10) {
-                // новая функция очистки, изменения данных циклом на строку ниже.
+                // функция очистки, изменения данных циклом на строку ниже.
                 console.log('Удаление')
 
                 for (let rows in workMatrix) {
@@ -174,71 +242,91 @@ export default {
                   }
                 }
                 workMatrix['0'] = {
-                  '0': { status: 0, id: 1 },
-                  '1': { status: 0, id: 2 },
-                  '2': { status: 0, id: 3 },
-                  '3': { status: 0, id: 4 },
-                  '4': { status: 0, id: 5 },
-                  '5': { status: 0, id: 6 },
-                  '6': { status: 0, id: 7 },
-                  '7': { status: 0, id: 8 },
-                  '8': { status: 0, id: 9 },
-                  '9': { status: 0, id: 10 },
-                },
-                  console.log(workMatrix);
+                  '0': { status: 0, id: 0 },
+                  '1': { status: 0, id: 0 },
+                  '2': { status: 0, id: 0 },
+                  '3': { status: 0, id: 0 },
+                  '4': { status: 0, id: 0 },
+                  '5': { status: 0, id: 0 },
+                  '6': { status: 0, id: 0 },
+                  '7': { status: 0, id: 0 },
+                  '8': { status: 0, id: 0 },
+                  '9': { status: 0, id: 0 },
+                };
               }
-              doNewMatrix(0, Math.floor(Math.random() * 10));
-              k = 1;
-              break;
             }
-            else if (i !== '9' && i !== '0' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом
-              console.log('Достигли низа (квадрат)');
-              workMatrix[i][j]["status"] = 1;
-              doNewMatrix(0, Math.floor(Math.random() * 10));
-            }
-            else if (i === '0' && workMatrix[String(Number(i) + 1)][j]["status"] === 1) { // поиск квадарта под квадартом на проигрыш
+            else if (i === '0' && workMatrix[String(Number(i) + 1)][j]["id"] === 1) { // поиск квадарта под квадартом на проигрыш
+              if (j === '9' && workMatrix[i][String(Number(j) + 1)]["id"] === 2) {
+                workMatrix[i][j]["id"] = 1;
+                workMatrix[i][j]["status"] = 3;
+                workMatrix[i][String(Number(j) + 1)]["id"] = 1;
+                workMatrix[i][String(Number(j) + 1)]["status"] = 3;
+              }
+              else {
+                workMatrix[i][j]["id"] = 1;
+                workMatrix[i][j]["status"] = 3;
+              }
               end = true; // можно удалить счётчик
-              workMatrix[i][j]["status"] = 3;
             }
             else {
-              // смещаем чёрный квадрат вниз
-              workMatrix[i][j]["status"] = 0;
-              workMatrix[String(Number(i) + 1)][j]["status"] = 2;
-              /*if (workMatrix[String(Number(i) + 1)] === undefined && Number(i) + 1 !== 10) {
-                workMatrix[String(Number(i) + 1)] = {}
-              };
-              console.log([String(Number(i) + 1)])
-              if (workMatrix[String(Number(i) + 1)][j] === undefined && (Number(i) + 1) !== 10) {
-                workMatrix[String(Number(i) + 1)][j] = {}
-              };
-              if (workMatrix[String(Number(i) + 1)][j]["status"] === undefined && Number(i) + 1 !== 10) {
-                workMatrix[String(Number(i) + 1)][j]["status"] = {}
-              };
-              if (String(Number(i) + 1) !== 10) {
-                workMatrix[String(Number(i) + 1)][j]["status"] = 2;
-              }*/
+              workMatrix = сheckingString(i, workMatrix);
+              break;
             }
-            console.log('ff')
-            k = 1;
-            //this.$store.commit('сhangeKey', workMatrix)
-            break;
           }
+          if (k === 1)
+            break;
         }
-        if (k === 1) {
+        if (k === 1)
           break;
-        }
+      }
+      if (doRandom === 0) {
+        doNewMatrix(0, Math.floor(Math.random() * 10));
       }
     }
 
     const doNewMatrix = (addressGlobal, addressLocal) => {
+      // 0 - куб
+      // 1 - полоска из 2-х кубов
+
+      const figure = Math.floor(Math.random() * 2)
+      //const figure = 1;
       const firstOrder = addressGlobal;
       const secondOrder = addressLocal;
       console.log("Сработал рандом");
-      workMatrix[firstOrder][secondOrder]["status"] = 2;
+      console.log(figure)
+      if (figure === 0) {
+        workMatrix[firstOrder][secondOrder]["status"] = 2;
+        workMatrix[firstOrder][secondOrder]["id"] = 2;
+        console.log('куб');
+      }
+      else if (figure === 1) {
+        console.log('прямоугольник');
+        workMatrix[firstOrder][secondOrder]["status"] = 2;
+        workMatrix[firstOrder][secondOrder]["id"] = 2;
+        if (secondOrder === 0) {
+          workMatrix[firstOrder][secondOrder + 1]["status"] = 2;
+          workMatrix[firstOrder][secondOrder + 1]["id"] = 2;
+        }
+        else if ((secondOrder === 9)) {
+          workMatrix[firstOrder][secondOrder - 1]["status"] = 2;
+          workMatrix[firstOrder][secondOrder - 1]["id"] = 2;
+        }
+        else {
+          if (Math.floor(Math.random() * 2) === 1) {
+            workMatrix[firstOrder][secondOrder + 1]["status"] = 2;
+            workMatrix[firstOrder][secondOrder + 1]["id"] = 2;
+          }
+          else {
+            workMatrix[firstOrder][secondOrder - 1]["status"] = 2;
+            workMatrix[firstOrder][secondOrder - 1]["id"] = 2;
+          }
+        }
+      }
+
       //this.$store.commit('сhangeKey', workMatrix)
     }
 
-    doNewMatrix(0, Math.floor(Math.random() * 10));
+    doNewMatrix(0, Math.floor(Math.random() * 10)); // 1 - строка, 2 - индекс в строке
     //сalculateMovement(workMatrix);
 
     const renderF = () => {
@@ -251,10 +339,6 @@ export default {
     }
 
     timer = setInterval(renderF, 200);
-
-
-    //const updateTime = () => setTimeout(сalculateMovement(props.matrix), 3000);
-    //updateTime();
 
     return {
       doNewMatrix,
