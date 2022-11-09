@@ -39,10 +39,10 @@ export default {
             if (this.workMatrix[i][j]["id"] === 2) {
               k = 1;
               if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["id"] != 1) {
+                this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
+                this.workMatrix[i][String(Number(j) - 1)]["status"] = this.workMatrix[i][j]["status"];
                 this.workMatrix[i][j]["id"] = 0;
                 this.workMatrix[i][j]["status"] = 0;
-                this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
-                this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
                 this.timer = setInterval(this.renderF, 200);
                 s = 1;
                 break;
@@ -59,9 +59,9 @@ export default {
             k = 1;
             if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["id"] != 1) { // меняем статус дальнего квадрата
               this.workMatrix[i][String(Number(j) + 1)]["id"] = 0; // было 00 22 22 стало 22 22 00
-              this.workMatrix[i][String(Number(j) + 1)]["status"] = 0;
               this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
-              this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
+              this.workMatrix[i][String(Number(j) - 1)]["status"] = this.workMatrix[i][String(Number(j) + 1)]["status"];
+              this.workMatrix[i][String(Number(j) + 1)]["status"] = 0;
               this.timer = setInterval(this.renderF, 200);
               s = 1;
               break;
@@ -77,9 +77,9 @@ export default {
               k = 1;
               if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["id"] != 1) {
                 this.workMatrix[i][j]["id"] = 0;
-                this.workMatrix[i][j]["status"] = 0;
                 this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
-                this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
+                this.workMatrix[i][String(Number(j) - 1)]["status"] = this.workMatrix[i][j]["status"];
+                this.workMatrix[i][j]["status"] = 0;
                 this.timer = setInterval(this.renderF, 200);
                 s = 1;
                 break;
@@ -109,10 +109,10 @@ export default {
               k = 1;
 
               if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["id"] != 1) {
-                this.workMatrix[i][j]["status"] = 0;
                 this.workMatrix[i][j]["id"] = 0;
-                this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+                this.workMatrix[i][String(Number(j) + 1)]["status"] = this.workMatrix[i][j]["status"];
                 this.workMatrix[i][String(Number(j) + 1)]["id"] = 2;
+                this.workMatrix[i][j]["status"] = 0;
                 this.timer = setInterval(this.renderF, 200);
                 s = 1;
                 break;
@@ -129,9 +129,9 @@ export default {
             k = 1;
             if (Number(j) >= 0 && this.workMatrix[i][String(Number(j) + 2)]["id"] != 1) { // меняем статус ближнего квадрата
               this.workMatrix[i][String(Number(j) + 0)]["id"] = 0; // было 00 22 22 стало 22 22 00
-              this.workMatrix[i][String(Number(j) + 0)]["status"] = 0;
               this.workMatrix[i][String(Number(j) + 2)]["id"] = 2;
-              this.workMatrix[i][String(Number(j) + 2)]["status"] = 2;
+              this.workMatrix[i][String(Number(j) + 2)]["status"] = this.workMatrix[i][String(Number(j) + 0)]["status"];
+              this.workMatrix[i][String(Number(j) + 0)]["status"] = 0;
               this.timer = setInterval(this.renderF, 200);
               s = 1;
               break;
@@ -157,9 +157,9 @@ export default {
               // смещаем в право
 
               if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["id"] != 1) {
-                this.workMatrix[i][j]["status"] = 0;
                 this.workMatrix[i][j]["id"] = 0;
-                this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+                this.workMatrix[i][String(Number(j) + 1)]["status"] = this.workMatrix[i][j]["status"];
+                this.workMatrix[i][j]["status"] = 0;
                 this.workMatrix[i][String(Number(j) + 1)]["id"] = 2;
                 this.timer = setInterval(this.renderF, 200);
                 s = 1;
@@ -193,12 +193,12 @@ export default {
               if (this.workMatrix[i][j]["id"] === 2 && this.workMatrix[i][String(Number(j) + 1)]["id"] === 2) {
                 if (this.workMatrix[String(Number(i) + 1)][j]["id"] !== 1 && this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["id"] !== 1) {
                   this.workMatrix[String(Number(i) + 1)][j]["id"] = 2;
-                  this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+                  this.workMatrix[String(Number(i) + 1)][j]["status"] = this.workMatrix[String(Number(i))][j]["status"];
                   this.workMatrix[String(Number(i))][j]["id"] = 0;
                   this.workMatrix[String(Number(i))][j]["status"] = 0;
 
                   this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["id"] = 2;
-                  this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["status"] = 2;
+                  this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["status"] = this.workMatrix[String(Number(i))][String(Number(j) + 1)]["status"];
                   this.workMatrix[String(Number(i))][String(Number(j) + 1)]["id"] = 0;
                   this.workMatrix[String(Number(i))][String(Number(j) + 1)]["status"] = 0;
                 }
@@ -206,7 +206,7 @@ export default {
               else {
                 if (this.workMatrix[String(Number(i) + 1)][j]["id"] !== 1) {
                   this.workMatrix[String(Number(i) + 1)][j]["id"] = 2;
-                  this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+                  this.workMatrix[String(Number(i) + 1)][j]["status"] = this.workMatrix[String(Number(i))][j]["status"];
                   this.workMatrix[String(Number(i))][j]["id"] = 0;
                   this.workMatrix[String(Number(i))][j]["status"] = 0;
                 }
@@ -215,7 +215,7 @@ export default {
             else {
               if (this.workMatrix[String(Number(i) + 1)][j]["id"] !== 1 && Number(i) <= 8) {
                 this.workMatrix[String(Number(i) + 1)][j]["id"] = 2;
-                this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+                this.workMatrix[String(Number(i) + 1)][j]["status"] = this.workMatrix[String(Number(i))][j]["status"];
                 this.workMatrix[String(Number(i))][j]["id"] = 0;
                 this.workMatrix[String(Number(i))][j]["status"] = 0;
               }
@@ -257,15 +257,15 @@ export default {
           if (i !== '9') {
             if (matrix[stringAdress][String(Number(i) + 1)]["id"] === 2) {
               if (matrix[String(Number(stringAdress) + 1)][i]["id"] !== 1 && matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["id"] !== 1) {
+                matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
+                matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["id"] = 2;
+                matrix[String(Number(stringAdress) + 1)][i]["status"] = matrix[stringAdress][String(Number(i) + 1)]["status"];
+                matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["status"] = matrix[stringAdress][String(Number(i) + 1)]["status"];
+
                 matrix[stringAdress][i]["id"] = 0;
                 matrix[stringAdress][String(Number(i) + 1)]["id"] = 0;
                 matrix[stringAdress][i]["status"] = 0;
                 matrix[stringAdress][String(Number(i) + 1)]["status"] = 0;
-
-                matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
-                matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["id"] = 2;
-                matrix[String(Number(stringAdress) + 1)][i]["status"] = 2;
-                matrix[String(Number(stringAdress) + 1)][String(Number(i) + 1)]["status"] = 2;
               }
               else {
                 matrix[stringAdress][i]["id"] = 1;
@@ -279,10 +279,10 @@ export default {
                 workMatrix[String(Number(stringAdress))][i]["id"] = 1;
               }
               else {
+                matrix[String(Number(stringAdress) + 1)][i]["status"] = matrix[stringAdress][i]["status"];
+                matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
                 matrix[stringAdress][i]["status"] = 0;
                 matrix[stringAdress][i]["id"] = 0;
-                matrix[String(Number(stringAdress) + 1)][i]["status"] = 2;
-                matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
               }
 
               break;
@@ -294,10 +294,10 @@ export default {
               workMatrix[String(Number(stringAdress))][i]["id"] = 1;
             }
             else {
+              matrix[String(Number(stringAdress) + 1)][i]["status"] = matrix[stringAdress][i]["status"];
+              matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
               matrix[stringAdress][i]["status"] = 0;
               matrix[stringAdress][i]["id"] = 0;
-              matrix[String(Number(stringAdress) + 1)][i]["status"] = 2;
-              matrix[String(Number(stringAdress) + 1)][i]["id"] = 2;
             }
 
             break;
@@ -317,8 +317,6 @@ export default {
       let doRandom = 0;
       for (let i in workMatrix) {
         for (let j in workMatrix[i]) {
-          console.log("ddd");
-          console.log(workMatrix);
           if (workMatrix[i][j]["id"] === 2) {
             doRandom = 1;
             k = 1;
@@ -326,6 +324,9 @@ export default {
             if (i === '9') {
               console.log('Достигли абсолютного низа');
               workMatrix[i][j]["id"] = 1;
+              if (workMatrix[i][String(Number(j) + 1)]["id"] === 2)
+                workMatrix[i][String(Number(j) + 1)]["id"] = 1;
+
               // проверяем заполнена ли девятая линия полностью.
               let check = 0;
               for (let y in workMatrix[i]) {
@@ -362,16 +363,6 @@ export default {
               }
             }
             else if (i === '0' && workMatrix[String(Number(i) + 1)][j]["id"] === 1) { // поиск квадарта под квадартом на проигрыш
-              if (j === '9' && workMatrix[i][String(Number(j) + 1)]["id"] === 2) {
-                workMatrix[i][j]["id"] = 1;
-                workMatrix[i][j]["status"] = 3;
-                workMatrix[i][String(Number(j) + 1)]["id"] = 1;
-                workMatrix[i][String(Number(j) + 1)]["status"] = 3;
-              }
-              else {
-                workMatrix[i][j]["id"] = 1;
-                workMatrix[i][j]["status"] = 3;
-              }
               end = true; // можно удалить счётчик
             }
             else {
@@ -387,44 +378,45 @@ export default {
           break;
       }
       if (doRandom === 0) {
-        doNewMatrix(0, Math.floor(Math.random() * 10));
+        doNewMatrix(0, Math.floor(Math.random() * 10), (Math.floor(Math.random() * 7) + 1));
       }
     }
 
-    const doNewMatrix = (addressGlobal, addressLocal) => {
+    const doNewMatrix = (addressGlobal, addressLocal, color) => {
       // 0 - куб
       // 1 - полоска из 2-х кубов
 
-      const figure = Math.floor(Math.random() * 2)
+      const figure = Math.floor(Math.random() * 2);
+      //const color = Math.floor(Math.random() * 7) + 1; // 0 отсутствует цвет
       //const figure = 1;
       const firstOrder = addressGlobal;
       const secondOrder = addressLocal;
       console.log("Сработал рандом");
       console.log(workMatrix);
       if (figure === 0) {
-        workMatrix[firstOrder][secondOrder]["status"] = 2;
+        workMatrix[firstOrder][secondOrder]["status"] = color;
         workMatrix[firstOrder][secondOrder]["id"] = 2;
         console.log('куб');
       }
       else if (figure === 1) {
         console.log('прямоугольник');
-        workMatrix[firstOrder][secondOrder]["status"] = 2;
+        workMatrix[firstOrder][secondOrder]["status"] = color;
         workMatrix[firstOrder][secondOrder]["id"] = 2;
         if (secondOrder === 0) {
-          workMatrix[firstOrder][secondOrder + 1]["status"] = 2;
+          workMatrix[firstOrder][secondOrder + 1]["status"] = color;
           workMatrix[firstOrder][secondOrder + 1]["id"] = 2;
         }
         else if ((secondOrder === 9)) {
-          workMatrix[firstOrder][secondOrder - 1]["status"] = 2;
+          workMatrix[firstOrder][secondOrder - 1]["status"] = color;
           workMatrix[firstOrder][secondOrder - 1]["id"] = 2;
         }
         else {
           if (Math.floor(Math.random() * 2) === 1) {
-            workMatrix[firstOrder][secondOrder + 1]["status"] = 2;
+            workMatrix[firstOrder][secondOrder + 1]["status"] = color;
             workMatrix[firstOrder][secondOrder + 1]["id"] = 2;
           }
           else {
-            workMatrix[firstOrder][secondOrder - 1]["status"] = 2;
+            workMatrix[firstOrder][secondOrder - 1]["status"] = color;
             workMatrix[firstOrder][secondOrder - 1]["id"] = 2;
           }
         }
@@ -434,16 +426,12 @@ export default {
       //this.$store.commit('сhangeKey', workMatrix)
     }
 
-    doNewMatrix(0, Math.floor(Math.random() * 10)); // 1 - строка, 2 - индекс в строке
+    doNewMatrix(0, Math.floor(Math.random() * 10), (Math.floor(Math.random() * 7) + 1));
     //сalculateMovement(workMatrix);
 
     const renderF = () => {
       if (!end) {
-        console.log("До калькуляции");
-        console.log(workMatrix);
         сalculateMovement();
-        console.log("До калькуляции");
-        console.log(workMatrix);
         //count++
         this.$store.commit('increment')
         //this.$store.commit('сhangeKey', workMatrix)
@@ -472,13 +460,16 @@ export default {
     <div class="firstClass">
       <div v-for="(item, index) in this.matrix" class="twoClass">
         <div v-for="(itemTwo, indexTwo) in item" class="threeClass">
-          <div v-if="itemTwo.status >= 3" class="cell cell__color_red">{{ itemTwo.status }}</div>
-          <div v-else-if="itemTwo.status >= 1"
-            v-bind:class="{ 'cell__color_orange': (rowDeleteColor && indexTwo === '9') }" class="cell cell__color_blue">
-            {{ itemTwo.status }}</div>
-          <div v-else class="cell">{{ itemTwo.status }}</div>
+          <div v-if="itemTwo.status === 1" class="cell cell__color_red"></div>
+          <div v-else-if="itemTwo.status === 7" class="cell cell__color_orange"></div>
+          <div v-else-if="itemTwo.status === 6" class="cell cell__color_yellow"></div>
+          <div v-else-if="itemTwo.status === 4" class="cell cell__color_green"></div>
+          <div v-else-if="itemTwo.status === 5" class="cell cell__color_blue"></div>
+          <div v-else-if="itemTwo.status === 2" class="cell cell__color_lightblue"></div>
+          <div v-else-if="itemTwo.status === 3" class="cell cell__color_purple"></div>
+          <div v-else class="cell"></div>
         </div>
-      </div>
+      </div>г
     </div>
   </div>
 </template>
