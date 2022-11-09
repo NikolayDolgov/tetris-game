@@ -19,6 +19,7 @@ export default {
   },
   methods: {
     listener: function (event) { // слушатель
+      console.log(this.workMatrix)
       console.log('pressed');
       console.log(event.key);
       if (event.key === 'ArrowRight')
@@ -34,13 +35,32 @@ export default {
       let s = 0;
       for (let i in this.workMatrix) {
         for (let j in this.workMatrix[i]) {
-          console.log("Не найден");
-          if (this.workMatrix[i][j]["status"] === 2) {
+          if (this.workMatrix[i][j]["id"] === 2 && Number(j) === 9) {
+            if (this.workMatrix[i][j]["id"] === 2) {
+              k = 1;
+              if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["id"] != 1) {
+                this.workMatrix[i][j]["id"] = 0;
+                this.workMatrix[i][j]["status"] = 0;
+                this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
+                this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+              else {
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+            }
+          }
+          else if (this.workMatrix[i][j]["id"] === 2 && this.workMatrix[i][String(Number(j) + 1)]["id"] === 2) {
+            // для двух блоков
             k = 1;
-            console.log('найден')
-
-            if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["status"] != 1) {
-              this.workMatrix[i][j]["status"] = 0;
+            if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["id"] != 1) { // меняем статус дальнего квадрата
+              this.workMatrix[i][String(Number(j) + 1)]["id"] = 0; // было 00 22 22 стало 22 22 00
+              this.workMatrix[i][String(Number(j) + 1)]["status"] = 0;
+              this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
               this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
               this.timer = setInterval(this.renderF, 200);
               s = 1;
@@ -52,6 +72,25 @@ export default {
               break;
             }
           }
+          else {// для одного блока
+            if (this.workMatrix[i][j]["id"] === 2) {
+              k = 1;
+              if (Number(j) > 0 && this.workMatrix[i][String(Number(j) - 1)]["id"] != 1) {
+                this.workMatrix[i][j]["id"] = 0;
+                this.workMatrix[i][j]["status"] = 0;
+                this.workMatrix[i][String(Number(j) - 1)]["id"] = 2;
+                this.workMatrix[i][String(Number(j) - 1)]["status"] = 2;
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+              else {
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+            }
+          }
         }
         if (k === 1)
           break;
@@ -59,21 +98,40 @@ export default {
       if (s === 0)
         this.timer = setInterval(this.renderF, 200);
     },
-    movementToRight: function () { // слушатель
+    movementToRight: function () { // слушатель // смещаем в право
       clearInterval(this.timer);
       let k = 0;
       let s = 0;
       for (let i in this.workMatrix) {
         for (let j in this.workMatrix[i]) {
-          console.log("Не найден");
-          if (this.workMatrix[i][j]["status"] === 2) {
-            k = 1;
-            console.log('найден')
-            // смещаем в право
+          if (this.workMatrix[i][j]["id"] === 2 && Number(j) === 9) {
+            if (this.workMatrix[i][j]["id"] === 2) {
+              k = 1;
 
-            if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["status"] != 1) {
-              this.workMatrix[i][j]["status"] = 0;
-              this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+              if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["id"] != 1) {
+                this.workMatrix[i][j]["status"] = 0;
+                this.workMatrix[i][j]["id"] = 0;
+                this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+                this.workMatrix[i][String(Number(j) + 1)]["id"] = 2;
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+              else {
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+            }
+          }
+          else if (this.workMatrix[i][j]["id"] === 2 && this.workMatrix[i][String(Number(j) + 1)]["id"] === 2 && Number(j) <= 7) {
+            // для двух блоков
+            k = 1;
+            if (Number(j) >= 0 && this.workMatrix[i][String(Number(j) + 2)]["id"] != 1) { // меняем статус ближнего квадрата
+              this.workMatrix[i][String(Number(j) + 0)]["id"] = 0; // было 00 22 22 стало 22 22 00
+              this.workMatrix[i][String(Number(j) + 0)]["status"] = 0;
+              this.workMatrix[i][String(Number(j) + 2)]["id"] = 2;
+              this.workMatrix[i][String(Number(j) + 2)]["status"] = 2;
               this.timer = setInterval(this.renderF, 200);
               s = 1;
               break;
@@ -82,6 +140,36 @@ export default {
               this.timer = setInterval(this.renderF, 200);
               s = 1;
               break;
+            }
+          }
+          else if (this.workMatrix[i][j]["id"] === 2 && this.workMatrix[i][String(Number(j) + 1)]["id"] === 2) {
+            // для двух блоков
+            k = 1;
+
+            this.timer = setInterval(this.renderF, 200);
+            s = 1;
+            break;
+          }
+          else {// для одного блока
+            if (this.workMatrix[i][j]["id"] === 2) {
+              k = 1;
+              console.log('найден')
+              // смещаем в право
+
+              if (Number(j) <= 8 && this.workMatrix[i][String(Number(j) + 1)]["id"] != 1) {
+                this.workMatrix[i][j]["status"] = 0;
+                this.workMatrix[i][j]["id"] = 0;
+                this.workMatrix[i][String(Number(j) + 1)]["status"] = 2;
+                this.workMatrix[i][String(Number(j) + 1)]["id"] = 2;
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
+              else {
+                this.timer = setInterval(this.renderF, 200);
+                s = 1;
+                break;
+              }
             }
           }
         }
@@ -93,29 +181,48 @@ export default {
     },
     movementToDown: function () { // слушатель
       clearInterval(this.timer);
+      console.log(this.workMatrix);
       let k = 0;
       let s = 0;
       for (let i in this.workMatrix) {
         for (let j in this.workMatrix[i]) {
-          console.log("Не найден");
-          if (this.workMatrix[i][j]["status"] === 2) {
+          console.log("Нажат даун");
+          if (this.workMatrix[i][j]["id"] === 2 && Number(i) <= 8) {
             k = 1;
-            console.log('найден')
-            // опускаем вниз
+            if (Number(j) !== 9) {
+              if (this.workMatrix[i][j]["id"] === 2 && this.workMatrix[i][String(Number(j) + 1)]["id"] === 2) {
+                if (this.workMatrix[String(Number(i) + 1)][j]["id"] !== 1 && this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["id"] !== 1) {
+                  this.workMatrix[String(Number(i) + 1)][j]["id"] = 2;
+                  this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+                  this.workMatrix[String(Number(i))][j]["id"] = 0;
+                  this.workMatrix[String(Number(i))][j]["status"] = 0;
 
-            if (Number(i) <= 8 && this.workMatrix[String(Number(i) + 1)][j]["status"] != 1) {
-              this.workMatrix[i][j]["status"] = 0;
-              this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
-              this.timer = setInterval(this.renderF, 200);
-              s = 1;
-              break;
+                  this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["id"] = 2;
+                  this.workMatrix[String(Number(i) + 1)][String(Number(j) + 1)]["status"] = 2;
+                  this.workMatrix[String(Number(i))][String(Number(j) + 1)]["id"] = 0;
+                  this.workMatrix[String(Number(i))][String(Number(j) + 1)]["status"] = 0;
+                }
+              }
+              else {
+                if (this.workMatrix[String(Number(i) + 1)][j]["id"] !== 1) {
+                  this.workMatrix[String(Number(i) + 1)][j]["id"] = 2;
+                  this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+                  this.workMatrix[String(Number(i))][j]["id"] = 0;
+                  this.workMatrix[String(Number(i))][j]["status"] = 0;
+                }
+              }
             }
             else {
-              this.timer = setInterval(this.renderF, 200);
-              s = 1;
-              break;
+              if (this.workMatrix[String(Number(i) + 1)][j]["id"] !== 1 && Number(i) <= 8) {
+                this.workMatrix[String(Number(i) + 1)][j]["id"] = 2;
+                this.workMatrix[String(Number(i) + 1)][j]["status"] = 2;
+                this.workMatrix[String(Number(i))][j]["id"] = 0;
+                this.workMatrix[String(Number(i))][j]["status"] = 0;
+              }
             }
+            break;
           }
+
         }
         if (k === 1)
           break;
@@ -145,7 +252,6 @@ export default {
     function сheckingString(stringAdress, matrix) {
       let k = 0;
       for (let i in matrix[stringAdress]) {
-        console.log(matrix[stringAdress][i]);
         if (matrix[stringAdress][i]["id"] === 2) {
           k = 1;
           if (i !== '9') {
@@ -211,12 +317,12 @@ export default {
       let doRandom = 0;
       for (let i in workMatrix) {
         for (let j in workMatrix[i]) {
+          console.log("ddd");
+          console.log(workMatrix);
           if (workMatrix[i][j]["id"] === 2) {
             doRandom = 1;
             k = 1;
-            console.log(`Найден ${i} ${j}`)
             // поиск на строке
-            console.log("Не найден");
             if (i === '9') {
               console.log('Достигли абсолютного низа');
               workMatrix[i][j]["id"] = 1;
@@ -269,6 +375,7 @@ export default {
               end = true; // можно удалить счётчик
             }
             else {
+              console.log(workMatrix);
               workMatrix = сheckingString(i, workMatrix);
               break;
             }
@@ -293,7 +400,7 @@ export default {
       const firstOrder = addressGlobal;
       const secondOrder = addressLocal;
       console.log("Сработал рандом");
-      console.log(figure)
+      console.log(workMatrix);
       if (figure === 0) {
         workMatrix[firstOrder][secondOrder]["status"] = 2;
         workMatrix[firstOrder][secondOrder]["id"] = 2;
@@ -321,6 +428,7 @@ export default {
             workMatrix[firstOrder][secondOrder - 1]["id"] = 2;
           }
         }
+        console.log(workMatrix);
       }
 
       //this.$store.commit('сhangeKey', workMatrix)
@@ -331,7 +439,11 @@ export default {
 
     const renderF = () => {
       if (!end) {
+        console.log("До калькуляции");
+        console.log(workMatrix);
         сalculateMovement();
+        console.log("До калькуляции");
+        console.log(workMatrix);
         //count++
         this.$store.commit('increment')
         //this.$store.commit('сhangeKey', workMatrix)
