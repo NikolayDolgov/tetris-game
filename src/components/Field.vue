@@ -81,8 +81,8 @@ export default {
                 this.workMatrix[i][j]["status"] = 0;
               }
               this.timer = setInterval(this.renderF, 200);
-                s = 1;
-                break;
+              s = 1;
+              break;
             }
           }
         }
@@ -284,6 +284,7 @@ export default {
     }
 
     const сalculateMovement = () => {
+      console.log('калькулятор работает')
       // status - цвет фигуры
       // поиск фигуры по id. Фигура, которая может перемещаться id = 2, пустое поле - 0, занятое - 1
       let k = 0;
@@ -297,8 +298,11 @@ export default {
             if (i === '9') {
               console.log('Достигли абсолютного низа');
               workMatrix[i][j]["id"] = 1;
-              if (workMatrix[i][String(Number(j) + 1)]["id"] === 2)
-                workMatrix[i][String(Number(j) + 1)]["id"] = 1;
+
+              if (j !== '9') {
+                if (workMatrix[i][String(Number(j) + 1)]["id"] === 2)
+                  workMatrix[i][String(Number(j) + 1)]["id"] = 1;
+              }
 
               // проверяем заполнена ли девятая линия полностью.
               let check = 0;
@@ -350,6 +354,53 @@ export default {
           break;
       }
       if (doRandom === 0) {
+
+        // проверка на наличие любой заполненой строки кроме 0 и 9
+        for (let row in workMatrix) {
+          if (row === '9')
+            break;
+
+          let check = 0;
+          for (let y in workMatrix[row]) {
+            if (workMatrix[row][y]['id'] === 0) {
+              break;
+            }
+            else {
+              check++;
+            }
+          }
+          if (check === 10) {
+            // функция очистки, изменения данных циклом на строку ниже.
+            console.log('Удаление не 9');
+            console.log(row);
+            let oooo = 0;
+            for (let rows in workMatrix) {
+              oooo++;
+              if (rows !== '9') {
+                for (let rowtt in workMatrix[rows]) {
+                  if (Number(row) < oooo)
+                    break;
+                  console.log(String(Number(row) - oooo), 'и', rowtt)
+                  const obj2 = Object.assign({}, workMatrix[String(Number(row) - oooo)][rowtt]);
+                  workMatrix[String(Number(row) - oooo + 1)][rowtt] = obj2;
+                }
+              }
+            }
+            workMatrix['0'] = {
+              '0': { status: 0, id: 0 },
+              '1': { status: 0, id: 0 },
+              '2': { status: 0, id: 0 },
+              '3': { status: 0, id: 0 },
+              '4': { status: 0, id: 0 },
+              '5': { status: 0, id: 0 },
+              '6': { status: 0, id: 0 },
+              '7': { status: 0, id: 0 },
+              '8': { status: 0, id: 0 },
+              '9': { status: 0, id: 0 },
+            };
+            break;
+          }
+        }
         doNewMatrix(0, Math.floor(Math.random() * 10), (Math.floor(Math.random() * 7) + 1));
       }
     }
@@ -391,8 +442,6 @@ export default {
         }
         console.log(workMatrix);
       }
-
-      //this.$store.commit('сhangeKey', workMatrix)
     }
 
     doNewMatrix(0, Math.floor(Math.random() * 10), (Math.floor(Math.random() * 7) + 1));
