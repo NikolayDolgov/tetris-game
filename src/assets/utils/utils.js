@@ -121,8 +121,4 @@ const matrix = {
   },
 }
 
-const getRandCell = (countCell) => {
-  return Math.floor(Math.random() * countCell);
-}
-
-export { matrix, getRandCell };
+export { matrix };
