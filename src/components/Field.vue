@@ -1,31 +1,36 @@
 <script>
 import "./Field.css"
-import Buttonk from './button/Button.vue'
-import "./button/Button.css"
 
 import { matrix as constMatrix } from "../assets/utils/utils";
 
 export default {
-  components: {
-    Buttonk,
-  },
   computed: {
     count() {
       return this.$store.state.count
     },
+    score() {
+      return this.$store.state.score
+    },
     matrix() {
       return this.$store.state.matrixField
+    },
+    status() {
+      return this.$store.state.status
     }
   },
   methods: {
     listener: function (event) { // слушатель всех кнопок
       /*console.log('pressed');
       console.log(event.key);*/
-      if (event.key === 'ArrowRight')
+      if (event.key === 'ArrowRight' && this.$store.state.status !== 'Старт') {
+        console.log(this.$store.state.status);
         this.movementToRight();
-      if (event.key === 'ArrowLeft')
+      }
+      
+        
+      if (event.key === 'ArrowLeft'  && this.$store.state.status !== 'Старт')
         this.movementToLeft();
-      if (event.key === 'ArrowDown')
+      if (event.key === 'ArrowDown'  && this.$store.state.status !== 'Старт')
         this.movementToDown();
     },
     movementToLeft: function () { // слушатель // смещаем в право
@@ -89,7 +94,7 @@ export default {
         if (k === 1)
           break;
       }
-      if (s === 0)
+      if (s === 0 && this.$store.state.status !== 'Старт')
         this.timer = setInterval(this.renderF, 200);
     },
     movementToRight: function () { // слушатель // смещаем в право
@@ -151,7 +156,7 @@ export default {
         if (k === 1)
           break;
       }
-      if (s === 0)
+      if (s === 0 && this.$store.state.status !== 'Старт')
         this.timer = setInterval(this.renderF, 200);
     },
     movementToDown: function () {
@@ -200,7 +205,7 @@ export default {
         if (k === 1)
           break;
       }
-      if (s === 0)
+      if (s === 0 && this.$store.state.status !== 'Старт')
         this.timer = setInterval(this.renderF, 200);
     },
   },
@@ -211,6 +216,7 @@ export default {
     document.removeEventListener('keydown', this.listener); // удаление
   },
   data() {
+    //let score = 0;
     let timer;
     let rowDeleteColor;
     let end = false;
@@ -337,6 +343,7 @@ export default {
                   '8': { status: 0, id: 0 },
                   '9': { status: 0, id: 0 },
                 };
+                this.$store.commit('incrementScore');
               }
             }
             else if (i === '0' && workMatrix[String(Number(i) + 1)][j]["id"] === 1) { // поиск квадарта под квадартом на проигрыш
@@ -381,8 +388,8 @@ export default {
                   if (Number(row) < oooo)
                     break;
                   console.log(String(Number(row) - oooo), 'и', rowtt)
-                  const obj2 = Object.assign({}, workMatrix[String(Number(row) - oooo)][rowtt]);
-                  workMatrix[String(Number(row) - oooo + 1)][rowtt] = obj2;
+                  const newObj = Object.assign({}, workMatrix[String(Number(row) - oooo)][rowtt]);
+                  workMatrix[String(Number(row) - oooo + 1)][rowtt] = newObj;
                 }
               }
             }
@@ -398,6 +405,7 @@ export default {
               '8': { status: 0, id: 0 },
               '9': { status: 0, id: 0 },
             };
+            this.$store.commit('incrementScore');
             break;
           }
         }
@@ -444,9 +452,6 @@ export default {
       }
     }
 
-    doNewMatrix(0, Math.floor(Math.random() * 10), (Math.floor(Math.random() * 7) + 1));
-    //сalculateMovement(workMatrix);
-
     const renderF = () => {
       if (!end) {
         сalculateMovement();
@@ -456,7 +461,32 @@ export default {
       }
     }
 
-    timer = setInterval(renderF, 200);
+    const gameStatus = () => {
+      if (this.$store.state.status === 'Старт') {
+        this.$store.commit('сhangeStatus', 'Стоп');
+
+        let newCheck = 0;
+        for (let i in workMatrix) {
+          for (let j in workMatrix[i]) {
+            if (workMatrix[i][j]['id'] === 2) {
+              newCheck = 1;
+              break;
+            }
+          }
+          if (newCheck === 1) {
+            break;
+          }
+        }
+        if (newCheck !== 1) {
+          doNewMatrix(0, Math.floor(Math.random() * 10), (Math.floor(Math.random() * 7) + 1));
+        }
+        this.timer = setInterval(renderF, 200);
+      }
+      else {
+        this.$store.commit('сhangeStatus', 'Старт');
+        clearInterval(this.timer);
+      }
+    }
 
     return {
       doNewMatrix,
@@ -464,20 +494,20 @@ export default {
       timer,
       rowDeleteColor,
       renderF,
+      gameStatus,
     }
   },
 }
-
-//<Buttonk v-for="(itemTwo, indexTwo) in item" :key=itemTwo.id :mean=itemTwo.status :addressGlobal=index :addressLocal=indexTwo
-//@newMatrix=doNewMatrix />
 </script>
 
 <template>
-  <div class="topNo">
-    <p class="hidden-text">{{ this.count }}</p>
-    <div class="firstClass">
-      <div v-for="(item, index) in this.matrix" class="twoClass">
-        <div v-for="(itemTwo, indexTwo) in item" class="threeClass">
+  <div class="field">
+    <h1 class="field__title">Тетрис</h1>
+    <button class="field__button" v-on:click="gameStatus">{{ this.$store.state.status }}</button>
+    <p class="field__hidden-text">{{ this.count }}</p>
+    <div class="field__field">
+      <div v-for="(item, index) in this.matrix" class="field__field-row">
+        <div v-for="(itemTwo, indexTwo) in item" class="field__field-colomn">
           <div v-if="itemTwo.status === 1" class="cell cell__color_red"></div>
           <div v-else-if="itemTwo.status === 7" class="cell cell__color_orange"></div>
           <div v-else-if="itemTwo.status === 6" class="cell cell__color_yellow"></div>
@@ -489,5 +519,6 @@ export default {
         </div>
       </div>
     </div>
+    <p class="field__score">Ваш счёт: {{ this.$store.state.score }}</p>
   </div>
 </template>

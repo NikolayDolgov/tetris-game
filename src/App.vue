@@ -4,7 +4,7 @@ import General from './components/General/General.vue'
 </script>
 
 <template>
-  <General />
-  <!--<Field />-->
+  <!--<General />-->
+  <Field />
 </template>
 

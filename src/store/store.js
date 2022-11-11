@@ -6,12 +6,20 @@ const store = createStore({
     return {
       count: 0,
       matrixField: matrix,
+      status: 'Старт',
+      score: 0,
     }
   },
 
   mutations: {
     increment (state) {
       state.count++
+    },
+    incrementScore (state) {
+      state.score++
+    },
+    сhangeStatus (state, newStatus) {
+      state.status = newStatus
     },
     сhangeKey (state, newMatrix) {
       state.matrixField = newMatrix
